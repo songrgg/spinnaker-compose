@@ -1,0 +1,118 @@
+spectator:
+  applicationName: ${spring.application.name}
+  webEndpoint:
+    enabled: false
+
+appengine:
+  enabled: false
+  accounts: []
+aws:
+  enabled: false
+  accounts: []
+  bakeryDefaults:
+    baseImages: []
+  defaultKeyPairTemplate: '{{name}}-keypair'
+  defaultRegions:
+  - name: us-west-2
+  defaults:
+    iamRole: BaseIAMRole
+ecs:
+  enabled: false
+  accounts: []
+azure:
+  enabled: false
+  accounts: []
+  bakeryDefaults:
+    templateFile: azure-linux.json
+    baseImages: []
+dcos:
+  enabled: false
+  accounts: []
+  clusters: []
+dockerRegistry:
+  enabled: false
+  accounts: []
+google:
+  enabled: false
+  accounts: []
+  bakeryDefaults:
+    templateFile: gce.json
+    baseImages: []
+    zone: us-central1-f
+    network: default
+    useInternalIp: false
+kubernetes:
+  enabled: false
+  accounts:
+  - name: my-k8s-v2-account
+    requiredGroupMembership: []
+    providerVersion: V2
+    permissions: {}
+    dockerRegistries: []
+    context:
+    configureImagePullSecrets: true
+    cacheThreads: 1
+    namespaces: []
+    omitNamespaces: []
+    kinds: []
+    omitKinds: []
+    customResources: []
+    cachingPolicies: []
+    kubeconfigFile:
+    oAuthScopes: []
+    onlySpinnakerManaged: false
+  primaryAccount: my-k8s-v2-account
+oracle:
+  enabled: false
+  accounts: []
+  bakeryDefaults:
+    templateFile: oci.json
+    baseImages: []
+cloudfoundry:
+  enabled: false
+  accounts: []
+
+artifacts:
+  bitbucket:
+    enabled: false
+    accounts: []
+  gcs:
+    enabled: false
+    accounts: []
+  oracle:
+    enabled: false
+    accounts: []
+  github:
+    enabled: false
+    accounts: []
+  gitlab:
+    enabled: false
+    accounts: []
+  http:
+    enabled: false
+    accounts: []
+  helm:
+    enabled: false
+    accounts: []
+  s3:
+    enabled: false
+    accounts: []
+  maven:
+    enabled: false
+    accounts: []
+  templates: []
+
+# halconfig
+
+admin.tasks.shutdownWaitSeconds: 600 # 10 minutes
+
+server:
+  port: ${services.clouddriver.port:7002}
+  address: ${services.clouddriver.host:localhost}
+
+redis:
+  connection: ${services.redis.baseUrl:redis://localhost:6379}
+
+caching:
+  redis:
+    hashingEnabled: true

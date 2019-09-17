@@ -1,0 +1,13 @@
+
+spectator:
+  applicationName: ${spring.application.name}
+  webEndpoint:
+    enabled: false
+# halconfig
+server:
+  port: ${services.rosco.port:8087}
+  address: ${services.rosco.host:localhost}
+redis:
+  connection: ${services.redis.baseUrl:redis://localhost:6379}
+rosco:
+  configDir: /opt/rosco/config/packer

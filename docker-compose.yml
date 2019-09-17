@@ -1,0 +1,123 @@
+spin-clouddriver:
+  container_name: spin-clouddriver
+  environment:
+    - "SPRING_PROFILES_ACTIVE=local"
+  image: gcr.io/spinnaker-marketplace/clouddriver:6.3.0-20190904130744
+  volumes:
+    - ./config/clouddriver.yml:/opt/spinnaker/config/clouddriver.yml
+    - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+    - ./serviceaccount:/var/run/secrets/kubernetes.io/serviceaccount
+  links:
+    - spin-redis
+  ports:
+    - "7002:7002"
+spin-deck:
+  container_name: spin-deck
+  environment:
+    - PROTOCOL=http
+    - AUTH_ENABLED=false
+    - FIAT_ENABLED=false
+  image: gcr.io/spinnaker-marketplace/deck:2.11.0-20190903213256
+  volumes:
+    - ./config/settings.js:/opt/spinnaker/config/settings.js
+  ports:
+    - "9000:9000"
+spin-echo:
+  container_name: spin-echo
+  environment:
+    - "JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2"
+    - "SPRING_PROFILES_ACTIVE=local"
+  image: gcr.io/spinnaker-marketplace/echo:2.7.0-20190904112813
+  volumes:
+    - ./config/echo.yml:/opt/spinnaker/config/echo.yml
+    - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+  ports:
+    - "8089:8089"
+spin-front50:
+  container_name: spin-front50
+  environment:
+    - "JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2"
+  image: gcr.io/spinnaker-marketplace/front50:0.19.0-20190904130744
+  volumes:
+    - ./config/front50.yml:/opt/spinnaker/config/front50.yml
+    - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+  ports:
+    - "8080:8080"
+  links:
+    - spin-redis
+spin-gate:
+  container_name: spin-gate
+  environment:
+    - "SPRING_PROFILES_ACTIVE=local"
+  image: gcr.io/spinnaker-marketplace/gate:1.11.0-20190904112813
+  volumes:
+      - ./config/gate.yml:/opt/spinnaker/config/gate.yml
+      - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+  links:
+    - spin-redis
+    - spin-clouddriver
+    - spin-echo
+    - spin-front50
+    - spin-igor
+    - spin-orca
+    - spin-rosco
+  ports:
+    - "8084:8084"
+spin-igor:
+  container_name: spin-igor
+  image: gcr.io/spinnaker-marketplace/igor:1.5.0-20190904130744
+  links:
+    - spin-redis
+    - spin-clouddriver
+    - spin-echo
+  ports:
+    - "8088:8088"
+spin-orca:
+  container_name: spin-orca
+  environment:
+    - "JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2"
+    - "SPRING_PROFILES_ACTIVE=local"
+  image: gcr.io/spinnaker-marketplace/orca:2.9.0-20190904130744
+  volumes:
+    - ./config/orca.yml:/opt/spinnaker/config/orca.yml
+    - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+    - ./config/plugins.yml:/opt/spinnaker/config/plugins.yml
+  links:
+    - spin-redis
+    - spin-clouddriver
+    - spin-echo
+    - spin-front50
+    - spin-igor
+    - spin-rosco
+  ports:
+    - "8083:8083"
+spin-redis:
+  container_name: spin-redis
+  image: gcr.io/kubernetes-spinnaker/redis-cluster:v2
+  environment:
+    - "MASTER=true"
+  ports:
+    - "6379:6379"
+spin-rosco:
+  container_name: spin-rosco
+  image: gcr.io/spinnaker-marketplace/rosco:0.14.0-20190904130744
+  volumes:
+    - ./config/rosco.yml:/opt/spinnaker/config/rosco.yml
+    - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+  links:
+    - spin-redis
+  ports:
+    - "8087:8087"
+  environment:
+    - "JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2"
+spin-fiat:
+  container_name: spin-fiat
+  image: gcr.io/spinnaker-marketplace/fiat:1.7.0-20190904130744
+  volumes:
+    - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+  links:
+    - spin-redis
+    - spin-clouddriver
+    - spin-front50
+  ports:
+    - "7003:7003"

@@ -1,0 +1,26 @@
+spectator:
+  applicationName: ${spring.application.name}
+  webEndpoint:
+    enabled: false
+
+server:
+  ssl:
+    enabled: false
+  port: '8084'
+  address: 0.0.0.0
+security:
+  basic:
+    enabled: true
+  user: {}
+cors: {}
+google: {}
+
+integrations:
+  gremlin:
+    enabled: false
+    baseUrl: https://api.gremlin.com/v1
+
+# halconfig
+
+redis:
+  connection: ${services.redis.baseUrl:redis://localhost:6379}
