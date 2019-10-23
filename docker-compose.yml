@@ -6,7 +6,6 @@ spin-clouddriver:
   volumes:
     - ./config/clouddriver.yml:/opt/spinnaker/config/clouddriver.yml
     - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
-    - ./config/clouddriver-config:/home/songrgg0_0/.hal/default/staging/dependencies/212552448-config
     - ./serviceaccount:/var/run/secrets/kubernetes.io/serviceaccount
   links:
     - spin-redis
