@@ -19,6 +19,19 @@ spinnaker:
     port: 6379
     enabled: true
 
+sql:
+  enabled: true
+  connectionPools:
+    default:
+      default: true
+      jdbcUrl: jdbc:mysql://<mysql-ip>:3306/front50
+      user: root
+      password: spinnaker
+  migration:
+    user: root
+    password: spinnaker
+    jdbcUrl: jdbc:mysql://<mysql-ip>:3306/front50
+
 server:
   port: ${services.front50.port:8080}
   address: ${services.front50.host:localhost}

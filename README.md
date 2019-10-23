@@ -2,15 +2,30 @@
 You can run spinnaker on CentOS by docker-compose.
 
 ## Quickstart
-Provision a machine with at least 16GB memory and 4 cores, it may need more than this since my macbook pro(4cores, 16GB) was stuck when I started spinnaker.
+1. Provision a machine  
+At least 16GB memory and 4 cores, it may need more than this since my macbook pro(4cores, 16GB) was stuck when I started spinnaker.
 
-```bash
-sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-git clone https://github.com/songrgg/spinnaker-compose
-cd spinnaker-compose
-docker-compose up -d
-```
+    ```bash
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    git clone https://github.com/songrgg/spinnaker-compose
+    ```
+
+1. Start MySQL for front50 service
+
+    ```bash
+    docker run -e MYSQL_ROOT_PASSWORD=spinnaker -p 3306:3306 -d mysql
+    docker exec -i mysql sh -c 'exec mysql -uroot -p spinnaker' < sql/front50_mysql.sql
+    ```
+
+    **Replace the `<mysql-ip>` in config/front50.yml.**
+
+1. Start all services
+
+    ```bash
+    cd spinnaker-compose
+    docker-compose up -d
+    ```
 
 ## To access the spinnaker
 Visit `http://localhost:9000` in browser if you run spinnaker on local machine.

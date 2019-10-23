@@ -6,6 +6,7 @@ spin-clouddriver:
   volumes:
     - ./config/clouddriver.yml:/opt/spinnaker/config/clouddriver.yml
     - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
+    - ./config/clouddriver-config:/home/songrgg0_0/.hal/default/staging/dependencies/212552448-config
     - ./serviceaccount:/var/run/secrets/kubernetes.io/serviceaccount
   links:
     - spin-redis
@@ -17,7 +18,7 @@ spin-deck:
     - PROTOCOL=http
     - AUTH_ENABLED=false
     - FIAT_ENABLED=false
-  image: gcr.io/spinnaker-marketplace/deck:2.11.0-20190903213256
+  image: gcr.io/spinnaker-marketplace/deck:2.12.0-20190912172818
   volumes:
     - ./config/settings.js:/opt/spinnaker/config/settings.js
   ports:
@@ -33,6 +34,9 @@ spin-echo:
     - ./config/spinnaker.yml:/opt/spinnaker/config/spinnaker.yml
   ports:
     - "8089:8089"
+  links:
+    - spin-front50
+    - spin-orca
 spin-front50:
   container_name: spin-front50
   environment:
@@ -58,7 +62,6 @@ spin-gate:
     - spin-clouddriver
     - spin-echo
     - spin-front50
-    - spin-igor
     - spin-orca
     - spin-rosco
   ports:
@@ -68,7 +71,6 @@ spin-igor:
   image: gcr.io/spinnaker-marketplace/igor:1.5.0-20190904130744
   links:
     - spin-redis
-    - spin-clouddriver
     - spin-echo
   ports:
     - "8088:8088"
@@ -85,9 +87,7 @@ spin-orca:
   links:
     - spin-redis
     - spin-clouddriver
-    - spin-echo
     - spin-front50
-    - spin-igor
     - spin-rosco
   ports:
     - "8083:8083"
