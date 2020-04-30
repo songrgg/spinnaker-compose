@@ -14,8 +14,9 @@ At least 16GB memory and 4 cores, it may need more than this since my macbook pr
 1. Start MySQL for front50 service
 
     ```bash
-    docker run -e MYSQL_ROOT_PASSWORD=spinnaker -p 3306:3306 -d mysql
-    docker exec -i mysql sh -c 'exec mysql -uroot -p spinnaker' < sql/front50_mysql.sql
+    $ docker run -e MYSQL_ROOT_PASSWORD=spinnaker -p 3306:3306 -d mysql:5.6
+    25369ee31baf63f0e722fb8948ec67e04e9bad45582f4f2fa6b890aed25105d1
+    $ docker exec -i 25369ee31baf63f0e722fb8948ec67e04e9bad45582f4f2fa6b890aed25105d1 sh -c 'exec mysql -uroot --password=spinnaker' < sql/front50_mysql.sql
     ```
 
     **Replace the `<mysql-ip>` in config/front50.yml.**
